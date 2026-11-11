@@ -38,6 +38,15 @@ for event in bb.dump():  # oldest first, for the post-mortem
     print(event["ts"], event["kind"], event["payload"])
 ```
 
+## Rust implementation
+
+The same flight recorder, ported to Rust (`src/lib.rs` + `src/main.rs`), with the Python version kept as the reference. The API mirrors the Python one: `Blackbox::new(max_events)` (or `with_clock` for a custom clock), `log(kind, payload)`, `error(kind, payload)`, `dump()`, `stats()` — thread-safe via an internal `Mutex`, all methods taking `&self` so the recorder can be shared as `Arc<Blackbox>`.
+
+```bash
+cargo test          # 11 tests, one per Python test case
+cargo run           # demo: log a few events, print stats and dump
+```
+
 ## Tests
 
 ```bash
