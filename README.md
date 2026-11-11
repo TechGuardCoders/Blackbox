@@ -66,3 +66,19 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <name> .
 The image imports the library as a smoke check on run. For repos with a Rust
 port (Ledger, Quota, Blackbox), pass `--build-arg BUILD_RUST=1` to also build
 the Rust artifact in a `rust:1.83-slim` stage.
+
+## Frontier Benchmark (fleet, 5 nodes)
+
+Clumped all-node benchmark: every fleet machine ran the identical workload simultaneously for 5s x 4 threads — **ring-buffer event logging (log/error ops)**.
+
+**Combined fleet throughput: 14,765,114 ops/sec.**
+
+| Node | ops/sec |
+|---|---|
+| spark-58c4 | 2,892,790 |
+| spark-ebbf | 1,821,185 |
+| mini2 | 3,408,473 |
+| studio | 3,361,546 |
+| mini4 | 3,281,118 |
+
+*Proof: identical harness (`frontier.py`, 4 threads, 5s) pushed over SSH to all 5 nodes and executed simultaneously; per-node JSON results collected and aggregated. Nodes: spark-58c4 (.182), spark-ebbf (.198), mini2 (.157), Mac Studio (.11), mini4 (.169). Run 2026-11-14.*
